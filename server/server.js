@@ -8,7 +8,7 @@ import adminRouter from "./routes/adminRoutes.js"
 import blogRouter from "./routes/blogRoutes.js"
 
 import helmet from "helmet"
-import mongoSanitize from "express-mongo-sanitize"
+import sanitize from "mongo-sanitize"
 import rateLimit from "express-rate-limit";
 
 const app = express()
@@ -24,7 +24,11 @@ const limiter = rateLimit({
 // Middlewares
 app.use(cors())
 app.use(helmet())
-app.use(mongoSanitize())
+app.use((req, res, next) => {
+    if (req.body) req.body = sanitize(req.body);
+    if (req.params) req.params = sanitize(req.params);
+    next()
+})
 app.use(limiter);
 
 app.use(express.json())
