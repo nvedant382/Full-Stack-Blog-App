@@ -7,7 +7,7 @@ import DashBoard from "./pages/admin/DashBoard";
 import ListBlog from "./pages/admin/ListBlog";
 import Comments from "./pages/admin/Comments";
 import Login from "./components/admin/Login";
-import AddBlog from "./pages/admin/addBlog";
+import AddBlog from "./pages/admin/AddBlog";
 import "quill/dist/quill.snow.css";
 import { Toaster } from "react-hot-toast";
 import { useAppContext } from "../context/AppContext";
