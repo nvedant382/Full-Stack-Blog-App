@@ -1,4 +1,3 @@
-import ImageKit from 'imagekit';
 import imagekit from '../configs/imagekit.js';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comment.js';
