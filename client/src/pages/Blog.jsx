@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 const Blog = () => {
   const { id } = useParams();
-  const { axios } = useAppContext();
+  const { axios, user } = useAppContext();
 
   const [data, setData] = useState(null);
   const [comments, setComments] = useState([]);
@@ -64,6 +64,7 @@ const Blog = () => {
   };
 
   useEffect(() => {
+    setName(user ? user.name : name);
     fetchBlogData();
     fetchComments();
   }, []);
@@ -87,7 +88,12 @@ const Blog = () => {
           dangerouslySetInnerHTML={{ __html: data.subTitle }}
         ></h2>
         <p className="inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 font-medium text-primary">
-          Vedant
+          by ~
+          {user && data.owner._id === user.id ? (
+            <span className="text-green-600">YOU</span>
+          ) : (
+            data.owner.name
+          )}
         </p>
       </div>
       <div className="mx-5 max-w-2xl md:max-w-3xl lg:max-w-5xl md:mx-auto my-10 mt-6">
@@ -99,7 +105,7 @@ const Blog = () => {
         ></div>
       </div>
       {/* Show Comments */}
-      <div className="mt-14 mb-10 max-w-3xl mx-auto">
+      <div className="mt-14 mb-10 max-w-3xl mx-auto max-md:m-6">
         <p className="font-semibold mb-4">Comments ({comments.length})</p>
         <div className="flex flex-col gap-6">
           {comments.map((item, index) => (
@@ -121,7 +127,7 @@ const Blog = () => {
         </div>
       </div>
       {/*Add Comment Section*/}
-      <div className="max-w-3xl mx-auto m-4">
+      <div className="max-w-3xl mx-auto m-4 max-md:m-5">
         <p className="font-semibold mb-4">Add Your Comment</p>
 
         <form
@@ -134,7 +140,8 @@ const Blog = () => {
             required
             className="w-full p-3 border border-gray-300 rounded outline-none"
             onChange={(e) => setName(e.target.value)}
-            value={name}
+            value={user ? user.name : name}
+            disabled={!!user}
           />
 
           <textarea
@@ -154,9 +161,9 @@ const Blog = () => {
         </form>
       </div>
       {/*Share Button*/}
-      <div className="mx-auto max-w-3xl my-24">
+      <div className="mx-auto max-w-3xl my-24 max-md:text-center">
         <p className="font-semibold my-4">Share this article on social media</p>
-        <div className="flex">
+        <div className="flex max-md:justify-center">
           <img src={assets.facebook_icon} width={50} alt="" />
           <img src={assets.twitter_icon} width={50} alt="" />
           <img src={assets.googleplus_icon} width={50} alt="" />

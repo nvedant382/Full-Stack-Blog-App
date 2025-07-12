@@ -5,6 +5,10 @@ import main from '../configs/gemini.js';
 
 export const addBlog = async (req, res) => {
     try {
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: "Not Validated" })
+        }
+
         const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog)
         const imageFile = req.file;
 
@@ -31,8 +35,9 @@ export const addBlog = async (req, res) => {
         })
 
         const image = optimizedImageUrl;
+        const ownerId = req.user.id
 
-        await Blog.create({ title, subTitle, description, category, image, isPublished })
+        await Blog.create({ title, subTitle, description, category, image, isPublished, owner: ownerId })
 
         res.json({ success: true, message: "Blog added successsfully" })
     } catch (error) {
@@ -52,11 +57,13 @@ export const getAllBlogs = async (req, res) => {
 export const getBlogById = async (req, res) => {
     try {
         const { blogId } = req.params;
-        const blog = await Blog.findById(blogId)
+        const blog = await Blog.findById(blogId).populate("owner")
 
         if (!blog) {
-            res.json({ success: false, message: "Blog Not Found" })
+            return res.json({ success: false, message: "Blog Not Found" })
         }
+        console.log(blog);
+
         res.json({ success: true, blog })
     } catch (error) {
         res.json({ success: false, message: error.message })
